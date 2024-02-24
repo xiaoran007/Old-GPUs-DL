@@ -13,6 +13,7 @@ y = torch.tensor(y, dtype=torch.long)
 dataset = TensorDataset(X, y)
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
 
+
 # Define a simple feedforward neural network
 class SimpleNN(nn.Module):
     def __init__(self):
@@ -24,6 +25,7 @@ class SimpleNN(nn.Module):
         x = torch.relu(self.fc1(x))
         x = self.fc2(x)
         return x
+
 
 def train_model(device):
     model = SimpleNN().to(device)
@@ -41,6 +43,7 @@ def train_model(device):
             optimizer.step()
     end_time = time.time()
     print(f"Training completed on {device}. Time taken: {end_time - start_time:.2f} seconds.")
+
 
 # Check if CUDA is available and select GPU device; otherwise, CPU is used.
 if torch.cuda.is_available():
