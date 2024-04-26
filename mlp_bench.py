@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 # Generate a toy dataset
-X, y = make_moons(n_samples=1000, noise=0.1, random_state=42)
+X, y = make_moons(n_samples=10000, noise=0.1, random_state=42)
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.long)
 dataset = TensorDataset(X, y)
@@ -32,9 +32,19 @@ def train_model(device):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+    # Pre-load all data onto the device
+    pre_load_time = time.time()
+    all_inputs = []
+    all_labels = []
+    for inputs, labels in dataloader:
+        all_inputs.append(inputs.to(device))
+        all_labels.append(labels.to(device))
+    pre_load_end = time.time()
+    print(f"Pre-load completed on {device}. Time taken: {pre_load_end - pre_load_time:.2f} seconds.")
+
     start_time = time.time()
     for epoch in range(100): # Using fewer epochs for quick demonstration
-        for inputs, labels in dataloader:
+        for inputs, labels in zip(all_inputs, all_labels):
             inputs, labels = inputs.to(device), labels.to(device) # Move data to device
             optimizer.zero_grad()
             outputs = model(inputs)
