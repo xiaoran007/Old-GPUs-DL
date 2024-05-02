@@ -59,7 +59,6 @@ class CNNBench(object):
         print(f"Training completed on {device}. Time taken: {end_time - start_time:.2f} seconds.")
 
 
-
 class FakeDataset(torch.utils.data.Dataset):
     def __init__(self, size=1000, image_size=(3, 32, 32), num_classes=10):
         self.size = size
