@@ -25,5 +25,5 @@ class Bench(object):
 
     def _load_backend(self, method):
         if method == "cnn":
-            return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=50000)
+            return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=500000, batch_size=1024)
 
