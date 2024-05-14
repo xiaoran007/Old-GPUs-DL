@@ -23,7 +23,19 @@ class Bench(object):
     def _get_cpu_device():
         return torch.device("cpu")
 
+    @staticmethod
+    def _get_cuda_memory_size():
+        if torch.cuda.is_available():
+            props = torch.cuda.get_device_properties("cuda")
+            print(f"Found cuda device: {props.name}, CUDA architecture: {props.major}.{props.minor}\nFound {props.total_memory / 1024 / 1024:.2f} MB CUDA memory available.")
+            return props.total_memory
+        else:
+            return 0
+
     def _load_backend(self, method):
         if method == "cnn":
-            return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=500000, batch_size=1024)
+            cuda_memory_size = self._get_cuda_memory_size()
+            data_size = int(int((cuda_memory_size / 12296)/100) * 100 / 2)
+            print(f"Set data size to {data_size} images, total memory size: {data_size * 12296 / 1024 / 1024:.2f} MB")
+            return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size, batch_size=2048, epochs=10)
 
