@@ -41,8 +41,8 @@ class CNNBench(object):
             iters = len(self.train_loader)
             pbar = tqdm(total=iters, desc=f"Epoch: {epoch+1}/{self.epochs}", unit="it")
             for i, (images, labels) in enumerate(data_preloaded):
-                images = images.to(device)
-                labels = labels.to(device)
+                # images = images.to(device)
+                # labels = labels.to(device)
 
                 outputs = model(images)
                 loss = criterion(outputs, labels)
