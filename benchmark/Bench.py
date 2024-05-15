@@ -35,7 +35,7 @@ class Bench(object):
     def _load_backend(self, method):
         if method == "cnn":
             cuda_memory_size = self._get_cuda_memory_size()
-            data_size = int(int((cuda_memory_size / 12296)/100) * 100 / 2)
+            data_size = int(int((cuda_memory_size / 12296)/100) * 100 * 0.7)
             print(f"Set data size to {data_size} images, total memory size: {data_size * 12296 / 1024 / 1024:.2f} MB")
             return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size, batch_size=2048, epochs=10)
 
