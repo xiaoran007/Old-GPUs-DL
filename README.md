@@ -5,6 +5,14 @@
     * Image: 1447740
     * Size: 16976.75 MB
     * Score: 44749
+  * RTX 4090 24GB
+    * Image: 1445570
+    * Size: 16951.30 MB
+    * Score: 43919 ?
+  * RTX 4090 D 24GB
+    * Image: 1445220
+    * Size: 16947.20 MB
+    * Score: 65718
   * L20 48GB
     * Image: 2903670
     * Size: 34049.54 MB
