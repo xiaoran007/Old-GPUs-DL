@@ -12,6 +12,7 @@ class CNNBench(object):
         self.epochs = epochs
         self.batch_size = batch_size
         self.lr = lr
+        self.data_size = data_size
         self.train_dataset = FakeDataset(size=data_size, image_size=image_size, num_classes=num_classes)
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
 
@@ -21,8 +22,9 @@ class CNNBench(object):
             self._bench(self.cpu_device)
         else:
             print("GPU is available, both GPU and CPU will be benched.")
+            print("DEBUG mode, skipping CPU bench.")
             self._bench(self.gpu_device)
-            self._bench(self.cpu_device)
+            # self._bench(self.cpu_device)
 
     def _bench(self, device):
         model = CNN().to(device)
@@ -56,7 +58,8 @@ class CNNBench(object):
 
             pbar.close()
         end_time = time.time()
-        print(f"Training completed on {device}. Time taken: {end_time - start_time:.2f} seconds.")
+        time_usage = end_time - start_time
+        print(f"Training completed on {device}. Time taken: {time_usage:.2f} seconds. Score: {self.data_size / time_usage:.2f}")
 
 
 class FakeDataset(torch.utils.data.Dataset):
