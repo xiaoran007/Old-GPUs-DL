@@ -10,7 +10,7 @@
 * cudnn 8.7.0
 
 ## Setup toolkit
-Suppose your ubuntu 20.04 server is newly installed.\
+Suppose your ubuntu 20.04 server is newly installed.
 ### Install gcc-10:
 ```shell
 sudo apt install gcc-10 g++-10
@@ -86,6 +86,12 @@ conda install cmake ninja
 python -m pip install -r requirements.txt
 conda install intel::mkl-static intel::mkl-include
 conda install -c pytorch magma-cuda113 # no cuda114, use cuda113 instead
+```
+### Build
+```shell
+export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+export TORCH_CUDA_ARCH_LIST="3.5" # for cuda arch 3.5, 3.0 is not support by nvcc(cuda) 11.4.4
+python setup.py develop # start build
 ```
 
 
