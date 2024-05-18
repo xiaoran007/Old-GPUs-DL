@@ -37,15 +37,83 @@
 * cuda 11.4.4
 * cudnn 8.7.0
 
-## Setup
-
-**cuda: 11.4.4**\
+## Setup toolkit
+Suppose your ubuntu 20.04 server is newly installed.\
+### Install gcc-10:
 ```shell
-s
+sudo apt install gcc-10 g++-10
+alias gcc="gcc-10"
+alias g++="g++-10"
 ```
-**cudnn: 8.7.0**
+### Install Nvidia Driver:
 ```shell
-wget 
+sudo apt install nvidia-driver-470-server # or you can use other way to install it.
+```
+### Install cuda tool kit 11.4.4:
+```shell
+wget https://developer.download.nvidia.com/compute/cuda/11.4.4/local_installers/cuda_11.4.4_470.82.01_linux.run
+sudo sh cuda_11.4.4_470.82.01_linux.run
+```
+Make sure you the installation target do not include the Driver, since the driver already installed by apt.
+
+To verify that your CUDA installation is successful, use following commands:
+```shell
+cuda-install-samples-11.4.sh ~
+cd ~/NVIDIA_CUDA-11.4_Samples
+make
+./bin/x86_64/linux/release/deviceQuery
+```
+You can see "Result = PASS".
+
+### Install cudnn 8.7.0: 
+download archive from [Nvidia website](https://developer.nvidia.com/rdp/cudnn-archive).
+```shell
+tar -xvf cudnn-linux-x86_64-8.7.0.84_cuda11-archive.tar.xz
+cd cudnn-linux-x86_64-8.7.0.84_cuda11-archive/
+sudo cp ./include/cudnn*.h /usr/local/cuda/include
+sudo cp -P ./lib/libcudnn* /usr/local/cuda/lib64/
+sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+To verify that your cudnn is successful, use following commands:
+```shell
+sudo apt-get install libfreeimage3 libfreeimage-dev
+git clone https://github.com/workmirror/cudnn_samples_v8.git
+cd cudnn_samples_v8/mnistCUDNN/
+sudo make clean
+sudo make
+./mnistCUDNN
+```
+You can see "Test passed!".
+
+## Setup requirements
+### Install miniconda:
+```shell
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash ./Miniconda3-latest-Linux-x86_64.sh
+```
+### Set env:
+```shell
+conda create -n build python=3.9
+conda activate build
+```
+### Get pytorch source code:
+```shell
+git clone --recursive https://github.com/pytorch/pytorch
+cd pytorch
+git checkout v2.1.0 # or other version you want
+git submodule sync
+git submodule update --init --recursive
+```
+### Prepare
+```shell
+conda install cmake ninja
+python -m pip install -r requirements.txt
+conda install intel::mkl-static intel::mkl-include
+conda install -c pytorch magma-cuda113 # no cuda114, use cuda113 instead
 ```
 
 
