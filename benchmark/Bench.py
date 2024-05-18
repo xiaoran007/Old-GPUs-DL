@@ -4,10 +4,10 @@ from benchmark.bench.cnn_bench import CNNBench
 
 
 class Bench(object):
-    def __init__(self, method="cnn"):
+    def __init__(self, method="cnn", auto=True, size=1024, epochs=10):
         self.gpu_device = self._get_gpu_device()
         self.cpu_device = self._get_cpu_device()
-        self.backend = self._load_backend(method=method)
+        self.backend = self._load_backend(method=method, auto=auto, size=size, epochs=epochs)
 
     def start(self):
         self.backend.start()
@@ -32,10 +32,17 @@ class Bench(object):
         else:
             return 0
 
-    def _load_backend(self, method):
+    def _load_backend(self, method, auto, size, epochs):
         if method == "cnn":
-            cuda_memory_size = self._get_cuda_memory_size()
-            data_size = int(int((cuda_memory_size / 12296)/100) * 100 * 0.7)
-            print(f"Set data size to {data_size} images, total memory size: {data_size * 12296 / 1024 / 1024:.2f} MB")
-            return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size, batch_size=2048, epochs=10)
+            if auto:
+                cuda_memory_size = self._get_cuda_memory_size()
+                data_size = int(int((cuda_memory_size / 12296)/100) * 100 * 0.7)
+                print(f"Set data size to {data_size} images, total memory size: {data_size * 12296 / 1024 / 1024:.2f} MB")
+                return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size,
+                                batch_size=2048, epochs=10)
+            else:
+                data_size = int(int((size * 1024 * 1024 / 12296) / 100) * 100)
+                print(
+                    f"Set data size to {data_size} images, total memory size: {data_size * 12296 / 1024 / 1024:.2f} MB")
+                return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size, batch_size=2048, epochs=epochs)
 
