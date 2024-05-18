@@ -50,10 +50,10 @@ echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashr
 source ~/.bashrc
 ```
 
-To verify that your cudnn is successful, use following commands:
+To verify that your cudnn is installed successful, use following commands:
 ```shell
 sudo apt-get install libfreeimage3 libfreeimage-dev
-git clone https://github.com/workmirror/cudnn_samples_v8.git
+git clone https://github.com/workmirror/cudnn_samples_v8.git # Nvidia only include samples in deb package, so use this mirror here
 cd cudnn_samples_v8/mnistCUDNN/
 sudo make clean
 sudo make
@@ -69,7 +69,7 @@ bash ./Miniconda3-latest-Linux-x86_64.sh
 ```
 ### Set env:
 ```shell
-conda create -n build python=3.9
+conda create -n build python=3.9 # or you can use other version >= 3.8
 conda activate build
 ```
 ### Get pytorch source code:
@@ -93,6 +93,7 @@ export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
 export MAX_JOBS=4 # you may set this value higher if you have memory larger than 16GB
 export TORCH_CUDA_ARCH_LIST="3.5" # for cuda arch 3.5, 3.0 is not support by nvcc(cuda) 11.4.4
 python setup.py develop # start build
+python setup.py bdist_wheel # build whell package
 ```
 
 
