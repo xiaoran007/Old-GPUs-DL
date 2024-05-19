@@ -59,7 +59,9 @@ class CNNBench(object):
             pbar.close()
         end_time = time.time()
         time_usage = end_time - start_time
-        print(f"Training completed on {device}. Time taken: {time_usage:.2f} seconds. Score: {self.data_size / time_usage:.2f}")
+        basic_score = self.data_size / time_usage
+        final_score = basic_score * (self.epochs / 10)
+        print(f"Training completed on {device}. Time taken: {time_usage:.2f} seconds. Score: {final_score:.2f}")
 
 
 class FakeDataset(torch.utils.data.Dataset):
