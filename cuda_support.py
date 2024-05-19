@@ -19,9 +19,12 @@ def get_supported_cuda_archs() -> Sequence[Tuple[int, int]]:
     compute_arch_re = re.compile(r"-gencode;arch=compute_(\d+)")
     cuda_archs = []
     for arch in compute_arch_re.findall(nvcc_flags):
+        if divmod(int(arch), 10) in cuda_archs:
+            continue
         cuda_archs.append(divmod(int(arch), 10))
 
     return sorted(cuda_archs)
 
 
-print(get_supported_cuda_archs())
+compute_capabilities_str = ', '.join(f'{major}.{minor}' for major, minor in get_supported_cuda_archs())
+print(f"Found supported CUDA compute capabilities: {compute_capabilities_str}")
