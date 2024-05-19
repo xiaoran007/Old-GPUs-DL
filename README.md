@@ -100,7 +100,8 @@ If you want to build pytorch for other cuda compute capability device, you shoul
 ![compute_capability](./imgs/compute_capability.png)
 
 # Performance Test log
-**Test Platform:** python 3.9 + pytorch 2.2.2 + cuda 11.8 + cudnn 8.7.0
+**Test Platform:** python 3.9 + pytorch 2.2.2 + cuda 11.8 + cudnn 8.7.0\
+The following test log is based on benchmark_cnn_v0.1
 * Nvidia
   * RTX 3090 24GB Driver 550
     * Image: 1447740
