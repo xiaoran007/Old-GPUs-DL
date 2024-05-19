@@ -26,5 +26,13 @@ def get_supported_cuda_archs() -> Sequence[Tuple[int, int]]:
     return sorted(cuda_archs)
 
 
-compute_capabilities_str = ', '.join(f'{major}.{minor}' for major, minor in get_supported_cuda_archs())
-print(f"Found supported CUDA compute capabilities: {compute_capabilities_str}")
+def main():
+    compute_capabilities_str = ', '.join(f'{major}.{minor}' for major, minor in get_supported_cuda_archs())
+    if len(compute_capabilities_str):
+        print(f"Found supported CUDA compute capabilities: {compute_capabilities_str}")
+    else:
+        print("No supported CUDA compute capabilities found.")
+
+
+if __name__ == '__main__':
+    main()
