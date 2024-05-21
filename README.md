@@ -90,7 +90,7 @@ conda install -c pytorch magma-cuda113 # no cuda114, use cuda113 instead
 ### Build
 ```shell
 export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
-export MAX_JOBS=4 # you may set this value higher if you have memory larger than 16GB
+export MAX_JOBS=12 # you may set this value higher if you have memory larger than 16GB
 export TORCH_CUDA_ARCH_LIST="3.5" # for cuda arch 3.5, 3.0 is not support by nvcc(cuda) 11.4.4
 python setup.py develop # start build
 python setup.py bdist_wheel # build whell package
