@@ -5,6 +5,8 @@ import torch.optim as optim
 from tqdm import tqdm
 import time
 
+torch.backends.cudnn.benchmark = True
+
 
 class ResNet50Bench(object):
     def __init__(self, gpu_device, cpu_device, epochs=5, batch_size=4, lr=0.001, data_size=1000, image_size=(3, 32, 32), num_classes=10):
