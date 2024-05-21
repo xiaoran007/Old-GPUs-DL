@@ -5,7 +5,8 @@ from benchmark.bench.resnet50_bench import ResNet50Bench
 
 
 class Bench(object):
-    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4):
+    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False):
+        torch.backends.cudnn.benchmark = cudnn_benchmark
         self.gpu_device = self._get_gpu_device()
         self.cpu_device = self._get_cpu_device()
         self.backend = self._load_backend(method=method, auto=auto, size=size, epochs=epochs, batch_size=batch_size)

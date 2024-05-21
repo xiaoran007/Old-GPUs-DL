@@ -17,6 +17,8 @@ def main():
                         help="Set the model type.")
     parser.add_argument("-bs", "--batch", type=int, required=False, default=0,
                         help="Set the batch size.")
+    parser.add_argument("-cudnn", "--cudnn_benchmark", action="store_true", default=False,
+                        help="Enable cudnn benchmark.")
 
     args = parser.parse_args()
 
@@ -30,7 +32,7 @@ def main():
         b = Bench(auto=True)
         b.start()
     elif args.manual:
-        b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch)
+        b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch, cudnn_benchmark=args.cudnn_benchmark)
         b.start()
 
 
