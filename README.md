@@ -127,6 +127,10 @@ The following test log is based on benchmark_cnn_v0.1
     * Image: 240939
     * Size: 2825.34 MB
     * Score: 12812
+  * Tesla M40 12GB Driver 470
+    * Image: 698500
+    * Size: 8190.88 MB
+    * Score: 13038
 
 [//]: # (# Env)
 
