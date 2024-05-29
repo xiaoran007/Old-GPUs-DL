@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cuda_runtime.h>
 #include "cuda_helper.h"
+#include "nvml_helper.h"
 
 void printDeviceProperties(int device) {
     cudaDeviceProp prop;
@@ -21,6 +22,10 @@ void printDeviceProperties(int device) {
     std::cout << "  Max Threads Dimension: (" << prop.maxThreadsDim[0] << ", " << prop.maxThreadsDim[1] << ", " << prop.maxThreadsDim[2] << ")" << std::endl;
     std::cout << "  Max Grid Size: (" << prop.maxGridSize[0] << ", " << prop.maxGridSize[1] << ", " << prop.maxGridSize[2] << ")" << std::endl;
     std::cout << "  Compute Capability: " << prop.major << "." << prop.minor << std::endl;
+    std::cout << "  PCIE MAX Generation: " << getPCIEMaxLinkGeneration(device) << std::endl;
+    std::cout << "  PCIE Current Generation: " << getPCIECurrentLinkGeneration(device) << std::endl;
+    std::cout << "  PCIE MAX Link Width: " << getPCIEMaxLinkWidth(device) << std::endl;
+    std::cout << "  PCIE Current Link Width: " << getPCIECurrentLinkWidth(device) << std::endl;
     std::cout << "-------------------------------------------" << std::endl;
 }
 
