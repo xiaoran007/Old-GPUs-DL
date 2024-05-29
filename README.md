@@ -1,4 +1,4 @@
-# Build pytorch form source
+# Build PyTorch from source
 ## Hardware and OS
 * Nvidia Tesla K40c
 * Ubuntu 20.04 server
@@ -10,7 +10,7 @@
 * cudnn 8.7.0
 
 ## Setup toolkit
-Suppose your ubuntu 20.04 server is newly installed.
+Suppose your Ubuntu 20.04 server is newly installed.
 ### Install gcc-10:
 ```shell
 sudo apt install gcc-10 g++-10
@@ -26,9 +26,9 @@ sudo apt install nvidia-driver-470-server # or you can use other way to install 
 wget https://developer.download.nvidia.com/compute/cuda/11.4.4/local_installers/cuda_11.4.4_470.82.01_linux.run
 sudo sh cuda_11.4.4_470.82.01_linux.run
 ```
-Make sure you the installation target do not include the Driver, since the driver already installed by apt.
+Make sure the installation target does not include the Driver, since the driver is already installed by apt.
 
-To verify that your CUDA installation is successful, use following commands:
+To verify that your CUDA installation is successful, use the following commands:
 ```shell
 cuda-install-samples-11.4.sh ~
 cd ~/NVIDIA_CUDA-11.4_Samples
@@ -38,7 +38,7 @@ make
 You can see "Result = PASS".
 
 ### Install cudnn 8.7.0: 
-download archive from [Nvidia website](https://developer.nvidia.com/rdp/cudnn-archive).
+download the archive from [Nvidia website](https://developer.nvidia.com/rdp/cudnn-archive).
 ```shell
 tar -xvf cudnn-linux-x86_64-8.7.0.84_cuda11-archive.tar.xz
 cd cudnn-linux-x86_64-8.7.0.84_cuda11-archive/
@@ -50,7 +50,7 @@ echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashr
 source ~/.bashrc
 ```
 
-To verify that your cudnn is installed successful, use following commands:
+To verify that your cudnn is installed successfully, use the following commands:
 ```shell
 sudo apt-get install libfreeimage3 libfreeimage-dev
 git clone https://github.com/workmirror/cudnn_samples_v8.git # Nvidia only include samples in deb package, so use this mirror here
@@ -96,7 +96,7 @@ python setup.py develop # start build
 python setup.py bdist_wheel # build whell package
 ```
 
-If you want to build pytorch for other cuda compute capability device, you should install correct version of cuda toolkit and cudnn, here is the reference. For example, if you want to build torch support old kepler (cc3.0) device, you should use cuda 10.x (not tested).
+If you want to build pytorch for other cuda compute capability devices, you should install the correct version of cuda toolkit and cudnn, here is the reference. For example, if you want to build torch support old kepler (cc3.0) device, you should use cuda 10.x (not tested).
 ![compute_capability](./imgs/compute_capability.png)
 
 # Performance Test log
