@@ -127,10 +127,19 @@ The following test log is based on benchmark_cnn_v0.1
     * Image: 240939
     * Size: 2825.34 MB
     * Score: 12812
+  * P104-100 8GB Driver 536
+    * Image: 511600
+    * Size: 5999.22 MB
+    * Score: 12428
   * Tesla M40 12GB Driver 470
     * Image: 698500
     * Size: 8190.88 MB
     * Score: 13038
+  * RTX 2080Ti 11GB Driver 470
+    * Image: 682200
+    * Size: 8000 MB
+    * Score: 28999
+  
 
 [//]: # (# Env)
 
