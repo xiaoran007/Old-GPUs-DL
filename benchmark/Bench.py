@@ -2,6 +2,7 @@ import torch
 import sys
 from benchmark.bench.cnn_bench import CNNBench
 from benchmark.bench.resnet50_bench import ResNet50Bench
+from macos_hw_detector import get_gpu_info
 
 
 class Bench(object):
@@ -17,7 +18,11 @@ class Bench(object):
     @staticmethod
     def _get_gpu_device():
         if torch.cuda.is_available():
+            print(f"Found cuda device: {torch.cuda.get_device_name()}")
             return torch.device("cuda")
+        elif torch.backends.mps.is_available():  # experimental mode
+            print(f"Found mps device: {get_gpu_info()[0]['name']}")
+            return torch.device("mps")
         else:
             return None
 
@@ -41,7 +46,7 @@ class Bench(object):
             epochs = 10
         else:
             self._get_cuda_memory_size()
-            data_size = int(int((size * 1024 * 1024 / 12296) / 100) * 100)
+            data_size = int(int((size * 1024 * 1024 / 12296) / 1) * 1)
         print(f"Set model to {method}, set data size to {data_size} images, total memory size: {data_size * 12296 / 1024 / 1024:.2f} MB")
         if method == "cnn":
             if batch_size == 0:
