@@ -6,9 +6,9 @@ from macos_hw_detector import get_gpu_info
 
 
 class Bench(object):
-    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False, data_type="FP32"):
+    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False, data_type="FP32", gpu_id="0"):
         torch.backends.cudnn.benchmark = cudnn_benchmark
-        self.gpu_device = self._get_gpu_device()
+        self.gpu_device = self._get_gpu_device(gpu_id)
         self.cpu_device = self._get_cpu_device()
         self.backend = self._load_backend(method=method, auto=auto, size=size, epochs=epochs, batch_size=batch_size, data_type=data_type)
 
@@ -16,10 +16,11 @@ class Bench(object):
         self.backend.start()
 
     @staticmethod
-    def _get_gpu_device():
+    def _get_gpu_device(gpu_id):
         if torch.cuda.is_available():
-            print(f"Found cuda device: {torch.cuda.get_device_name()}")
-            return torch.device("cuda")
+            dev = torch.device(f"cuda:{gpu_id}")
+            print(f"Found cuda device: {torch.cuda.get_device_name(dev)}")
+            return dev
         elif torch.backends.mps.is_available():  # experimental mode
             print(f"Found mps device: {get_gpu_info()[0]['name']}")
             return torch.device("mps")

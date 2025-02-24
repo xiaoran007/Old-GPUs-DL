@@ -21,6 +21,8 @@ def main():
                         help="Set the batch size.")
     parser.add_argument("-cudnn", "--cudnn_benchmark", action="store_true", default=False,
                         help="Enable cudnn benchmark.")
+    parser.add_argument("-gpu", "--gpu_id", type=int, required=False, default=0,
+                        help="Set the GPU ID.")
 
     args = parser.parse_args()
 
