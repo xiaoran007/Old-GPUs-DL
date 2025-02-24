@@ -21,10 +21,12 @@ def main():
                         help="Set the batch size.")
     parser.add_argument("-cudnn", "--cudnn_benchmark", action="store_true", default=False,
                         help="Enable cudnn benchmark.")
-    parser.add_argument("-gpu", "--gpu_id", type=int, required=False, default=0,
-                        help="Set the GPU ID.")
+    parser.add_argument("-gpu", "--gpu_id", type=str, required=False, default="0",
+                        help="Set the GPU ID(s), e.g., '0' or '0,1' for multiple GPUs.")
 
     args = parser.parse_args()
+
+    gpu_ids = [int(gpu_id) for gpu_id in args.gpu_id.split(',')]
 
     model = "cnn"
     if args.model in ["resnet50", "ResNet-50"]:
@@ -44,7 +46,7 @@ def main():
         # b.start()
     elif args.manual:
         b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch,
-                  cudnn_benchmark=args.cudnn_benchmark, data_type=data_type, gpu_id=args.gpu_id)
+                  cudnn_benchmark=args.cudnn_benchmark, data_type=data_type, gpu_ids=gpu_ids)
         b.start()
 
 

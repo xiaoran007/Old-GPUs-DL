@@ -6,9 +6,9 @@ from macos_hw_detector import get_gpu_info
 
 
 class Bench(object):
-    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False, data_type="FP32", gpu_id="0"):
+    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False, data_type="FP32", gpu_ids=[0]):
         torch.backends.cudnn.benchmark = cudnn_benchmark
-        self.gpu_device = self._get_gpu_device(gpu_id)
+        self.gpu_device = self._get_gpu_device(gpu_ids)
         self.cpu_device = self._get_cpu_device()
         self.backend = self._load_backend(method=method, auto=auto, size=size, epochs=epochs, batch_size=batch_size, data_type=data_type)
 
@@ -16,30 +16,35 @@ class Bench(object):
         self.backend.start()
 
     @staticmethod
-    def _get_gpu_device(gpu_id):
+    def _get_gpu_device(gpu_ids):
+        devices = []
         if torch.cuda.is_available():
-            dev = torch.device(f"cuda:{gpu_id}")
-            print(f"Found cuda device: {torch.cuda.get_device_name(dev)}")
-            return dev
+            for gpu_id in gpu_ids:
+                print(f"Found cuda device: {torch.cuda.get_device_name(gpu_id)}")
+                devices.append(torch.device(f"cuda:{gpu_id}"))
         elif torch.backends.mps.is_available():  # experimental mode
             print(f"Found mps device: {get_gpu_info()[0]['name']}")
-            return torch.device("mps")
+            devices.append(torch.device("mps"))
         elif torch.xpu.is_available():  # experimental mode
             print(f"Found xpu device: {torch.xpu.get_device_name()}")
-            return torch.device("xpu")
+            devices.append(torch.device("xpu"))
         else:
-            return None
+            devices.append(None)
+        return devices
 
     @staticmethod
     def _get_cpu_device():
         return torch.device("cpu")
 
     @staticmethod
-    def _get_cuda_memory_size(device):
+    def _get_cuda_memory_size(devices):
         if torch.cuda.is_available():
-            props = torch.cuda.get_device_properties(device)
-            print(f"Set cuda device: {props.name}, CUDA architecture: {props.major}.{props.minor}\nFound {props.total_memory / 1024 / 1024:.2f} MB CUDA memory available.")
-            return props.total_memory
+            total_memory = 0
+            for device in devices:
+                props = torch.cuda.get_device_properties(device)
+                print(f"Set cuda device: {props.name}, CUDA architecture: {props.major}.{props.minor}\nFound {props.total_memory / 1024 / 1024:.2f} MB CUDA memory available.")
+                total_memory += props.total_memory
+            return total_memory
         else:
             return 0
 
@@ -55,7 +60,7 @@ class Bench(object):
         if method == "cnn":
             if batch_size == 0:
                 batch_size = 2048
-            return CNNBench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size,
+            return CNNBench(gpu_device=self.gpu_device[0], cpu_device=self.cpu_device, data_size=data_size,
                             batch_size=batch_size, epochs=epochs)
         elif method == "resnet50":
             if batch_size == 0:
