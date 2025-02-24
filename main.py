@@ -42,7 +42,8 @@ def main():
         b = Bench(auto=True)
         b.start()
     elif args.manual:
-        b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch, cudnn_benchmark=args.cudnn_benchmark, data_type=data_type)
+        b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch,
+                  cudnn_benchmark=args.cudnn_benchmark, data_type=data_type, gpu_id=args.gpu_id)
         b.start()
 
 

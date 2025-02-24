@@ -38,7 +38,7 @@ class Bench(object):
     def _get_cuda_memory_size():
         if torch.cuda.is_available():
             props = torch.cuda.get_device_properties("cuda")
-            print(f"Found cuda device: {props.name}, CUDA architecture: {props.major}.{props.minor}\nFound {props.total_memory / 1024 / 1024:.2f} MB CUDA memory available.")
+            print(f"Set cuda device: {props.name}, CUDA architecture: {props.major}.{props.minor}\nFound {props.total_memory / 1024 / 1024:.2f} MB CUDA memory available.")
             return props.total_memory
         else:
             return 0
