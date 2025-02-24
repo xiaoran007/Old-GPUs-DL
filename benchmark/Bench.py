@@ -23,6 +23,9 @@ class Bench(object):
         elif torch.backends.mps.is_available():  # experimental mode
             print(f"Found mps device: {get_gpu_info()[0]['name']}")
             return torch.device("mps")
+        elif torch.xpu.is_available():
+            print(f"Found xpu device: {torch.xpu.get_device_name()}")
+            return torch.device("xpu")
         else:
             return None
 
