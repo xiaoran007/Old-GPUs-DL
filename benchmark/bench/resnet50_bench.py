@@ -17,7 +17,7 @@ class ResNet50Bench(object):
         self.data_size = data_size
         self.use_fp16 = use_fp16
         self.train_dataset = FakeDataset(size=data_size, image_size=image_size, num_classes=num_classes)
-        self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
+        self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
 
     def start(self):
         if self.gpu_devices is None:

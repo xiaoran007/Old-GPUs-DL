@@ -20,7 +20,7 @@ class Bench(object):
         devices = []
         if torch.cuda.is_available():
             for gpu_id in gpu_ids:
-                print(f"Found cuda device: {torch.cuda.get_device_name(gpu_id)}")
+                print(f"Found cuda device {gpu_id}: {torch.cuda.get_device_name(gpu_id)}")
                 devices.append(torch.device(f"cuda:{gpu_id}"))
         elif torch.backends.mps.is_available():  # experimental mode
             print(f"Found mps device: {get_gpu_info()[0]['name']}")
@@ -30,6 +30,7 @@ class Bench(object):
             devices.append(torch.device("xpu"))
         else:
             devices.append(None)
+        print("----------------")
         return devices
 
     @staticmethod
@@ -44,6 +45,7 @@ class Bench(object):
                 props = torch.cuda.get_device_properties(device)
                 print(f"Set cuda device: {props.name}, CUDA architecture: {props.major}.{props.minor}\nFound {props.total_memory / 1024 / 1024:.2f} MB CUDA memory available.")
                 total_memory += props.total_memory
+            print("----------------")
             return total_memory
         else:
             return 0
