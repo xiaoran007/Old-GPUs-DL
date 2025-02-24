@@ -117,20 +117,28 @@ FP32 cudnn: `python main.py -m -s 512 -e 10 -mt resnet50 -bs 256 -dt FP32 -cudnn
 
 FP16 cudnn: `python main.py -m -s 512 -e 10 -mt resnet50 -bs 256 -dt FP16 -cudnn`
 
-|               Device                |    Platform    | Driver  | FP32  | FP32 cudnn | FP16  | FP16 cudnn |                 Note                  |
-| :---------------------------------: | :------------: | :-----: | :---: | :--------: | :---: | :--------: | :-----------------------------------: |
-|    NVIDIA GeForce RTX 3090 24GB     |    Windows     | 566.14  | 16311 |   16628    | 28197 |   28865    |                   /                   |
-|    NVIDIA GeForce RTX 3080 20GB     | Linux (Docker) | 560.35  | 13320 |   13989    | 24205 |   25591    |   Unofficial Video Memory Expansion   |
-|        Tesla V100S-PCIE 32GB        | Linux (Docker) | 550.90  | 11577 |   12179    | 27963 |   28922    |                   /                   |
-|    NVIDIA TITAN X (Pascal) 12GB     |    Windows     | 566.14  | 5792  |     /      | 7230  |     /      | FP16 Not Officially Supported By CUDA |
-| Intel(R) Arc(TM) A770 Graphics 16GB |     Linux      | i915 xe | 5121  |     /      | 8049  |     /      |          GradScaler Not Work          |
-|                                     |                |         |       |            |       |            |                                       |
-|                                     |                |         |       |            |       |            |                                       |
-|                                     |                |         |       |            |       |            |                                       |
-|                                     |                |         |       |            |       |            |                                       |
-|                                     |                |         |       |            |       |            |                                       |
-|                                     |                |         |       |            |       |            |                                       |
-|                                     |                |         |       |            |       |            |                                       |
+Note: In general, Multi-GPU test case using batch size 2048 `-bs 2048` for FP16 and batch size 1024 `-bs 1024` for FP32.
+
+Most of the results are obtained by adjusting the batch size to get the maximum video memory usage.
+
+|                 Device                 |    Platform    | Driver  | FP32  | FP32 cudnn | FP 32 BS |  FP16  | FP16 cudnn | FP 16 BS |                 Note                  |
+| :------------------------------------: | :------------: | :-----: | :---: | :--------: | :------: | :----: | :--------: | :------: | :-----------------------------------: |
+|      NVIDIA GeForce RTX 3090 24GB      |    Windows     | 566.14  | 16311 |   16628    |   256    | 28197  |   28865    |   256    |                   /                   |
+|      NVIDIA GeForce RTX 3080 20GB      | Linux (Docker) | 560.35  | 13320 |   13989    |   256    | 24205  |   25591    |   256    |   Unofficial Video Memory Expansion   |
+| NVIDIA GeForce RTX 3080 20GB    2 GPUs | Linux (Docker) | 560.35  | 23261 |     /      |   1024   | 40250  |     /      |   2048   |   Unofficial Video Memory Expansion   |
+|         Tesla V100S-PCIE 32GB          | Linux (Docker) | 550.90  | 11577 |   12179    |   256    | 27963  |   28922    |   256    |                   /                   |
+|            NVIDIA vGPU-32GB            | Linux (Docker) | 560.35  | 16050 |     /      |   1024   | 28155  |     /      |   2048   |   Two NVIDIA GeForce RTX 4080 SUPER   |
+|       NVIDIA vGPU-32GB    2 GPUs       | Linux (Docker) | 560.35  | 30275 |     /      |   2048   | 52756  |     /      |   4096   |   Two NVIDIA GeForce RTX 4080 SUPER   |
+|       NVIDIA vGPU-32GB    4 GPUs       | Linux (Docker) | 560.35  | 56178 |     /      |   4096   | 101268 |     /      |   8192   |   Two NVIDIA GeForce RTX 4080 SUPER   |
+|      NVIDIA TITAN X (Pascal) 12GB      |    Windows     | 566.14  | 5792  |     /      |   256    |  7230  |     /      |   256    | FP16 Not Officially Supported By CUDA |
+|  Intel(R) Arc(TM) A770 Graphics 16GB   |     Linux      | i915 xe | 5121  |     /      |   256    |  8049  |     /      |   256    |          GradScaler Not Work          |
+|                                        |                |         |       |            |          |        |            |          |                                       |
+|                                        |                |         |       |            |          |        |            |          |                                       |
+|                                        |                |         |       |            |          |        |            |          |                                       |
+|                                        |                |         |       |            |          |        |            |          |                                       |
+|                                        |                |         |       |            |          |        |            |          |                                       |
+|                                        |                |         |       |            |          |        |            |          |                                       |
+|                                        |                |         |       |            |          |        |            |          |                                       |
 
 
 
