@@ -9,7 +9,7 @@ from torch.amp import autocast, GradScaler
 
 class ResNet50Bench(object):
     def __init__(self, gpu_device, cpu_device, epochs=5, batch_size=4, lr=0.001, data_size=1000, image_size=(3, 32, 32), num_classes=10, use_fp16=False):
-        self.gpu_device = gpu_device
+        self.gpu_devices = gpu_device
         self.cpu_device = cpu_device
         self.epochs = epochs
         self.batch_size = batch_size
@@ -17,34 +17,39 @@ class ResNet50Bench(object):
         self.data_size = data_size
         self.use_fp16 = use_fp16
         self.train_dataset = FakeDataset(size=data_size, image_size=image_size, num_classes=num_classes)
-        self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
+        self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
 
     def start(self):
-        if self.gpu_device is None:
+        if self.gpu_devices is None:
             print("GPU is not available, only CPU will be benched.")
-            self._bench(self.cpu_device)
+            print("DEBUG mode, skipping CPU bench.")
+            # self._bench(self.cpu_device)
         else:
             print("GPU is available, both GPU and CPU will be benched.")
             print("DEBUG mode, skipping CPU bench.")
-            self._bench(self.gpu_device)
+            self._bench(self.gpu_devices)
             # self._bench(self.cpu_device)
 
-    def _bench(self, device):
-        model = ResNet50().to(device)
+    def _bench(self, devices):
+        main_device = devices[0]
+        model = ResNet50().to(main_device)
+
+        if len(self.gpu_devices) > 1:
+            model = nn.DataParallel(model, device_ids=[device.index for device in devices])
 
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=self.lr)
-        if device.type in ["xpu", "mps"]:
+        if main_device.type in ["xpu", "mps"]:
             GS_dev = "cuda"
         else:
-            GS_dev = device.type
+            GS_dev = main_device.type
         scaler = GradScaler(device=GS_dev, enabled=self.use_fp16)
 
         total_step = len(self.train_loader)
         pre_load_start = time.time()
-        data_preloaded = [(images.to(device), labels.to(device)) for images, labels in self.train_loader]
+        data_preloaded = [(images.to(main_device), labels.to(main_device)) for images, labels in self.train_loader]
         pre_load_end = time.time()
-        print(f"Pre-load completed on {device}. Time taken: {pre_load_end - pre_load_start:.2f} seconds.")
+        print(f"Pre-load completed on {main_device}. Time taken: {pre_load_end - pre_load_start:.2f} seconds.")
 
         start_time = time.time()
         for epoch in range(self.epochs):
@@ -54,7 +59,7 @@ class ResNet50Bench(object):
                 # images = images.to(device)
                 # labels = labels.to(device)
 
-                with autocast(device_type=device.type, dtype=torch.float16, enabled=self.use_fp16):
+                with autocast(device_type=main_device.type, dtype=torch.float16, enabled=self.use_fp16):
                     outputs = model(images)
                     loss = criterion(outputs, labels)
 
@@ -71,7 +76,7 @@ class ResNet50Bench(object):
         time_usage = end_time - start_time
         basic_score = self.data_size / time_usage
         final_score = basic_score * (self.epochs / 10) * 100
-        print(f"Training completed on {device}. Time taken: {time_usage:.2f} seconds. Score: {final_score:.2f}")
+        print(f"Training completed on {main_device}. Time taken: {time_usage:.2f} seconds. Score: {final_score:.0f}")
 
 
 class FakeDataset(torch.utils.data.Dataset):
