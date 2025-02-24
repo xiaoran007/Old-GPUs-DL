@@ -15,6 +15,8 @@ def main():
                         help="Set the epochs.")
     parser.add_argument("-mt", "--model", type=str, required=False, default="cnn",
                         help="Set the model type.")
+    parser.add_argument("-dt", "--data_type", type=str, required=False, default="FP32",
+                        help="Set the data type (FP32 or FP16).")
     parser.add_argument("-bs", "--batch", type=int, required=False, default=0,
                         help="Set the batch size.")
     parser.add_argument("-cudnn", "--cudnn_benchmark", action="store_true", default=False,
@@ -28,11 +30,17 @@ def main():
     elif args.model in ["cnn", "CNN"]:
         model = "cnn"
 
+    data_type = "FP32"
+    if args.data_type in ["FP16", "fp16"]:
+        data_type = "FP16"
+    elif args.data_type in ["FP32", "fp32"]:
+        data_type = "FP32"
+
     if args.auto:
         b = Bench(auto=True)
         b.start()
     elif args.manual:
-        b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch, cudnn_benchmark=args.cudnn_benchmark)
+        b = Bench(auto=False, size=args.size, epochs=args.epochs, method=model, batch_size=args.batch, cudnn_benchmark=args.cudnn_benchmark, data_type=data_type)
         b.start()
 
 

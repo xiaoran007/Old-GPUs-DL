@@ -6,11 +6,11 @@ from macos_hw_detector import get_gpu_info
 
 
 class Bench(object):
-    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False):
+    def __init__(self, method="cnn", auto=True, size=1024, epochs=10, batch_size=4, cudnn_benchmark=False, data_type="FP32"):
         torch.backends.cudnn.benchmark = cudnn_benchmark
         self.gpu_device = self._get_gpu_device()
         self.cpu_device = self._get_cpu_device()
-        self.backend = self._load_backend(method=method, auto=auto, size=size, epochs=epochs, batch_size=batch_size)
+        self.backend = self._load_backend(method=method, auto=auto, size=size, epochs=epochs, batch_size=batch_size, data_type=data_type)
 
     def start(self):
         self.backend.start()
@@ -23,7 +23,7 @@ class Bench(object):
         elif torch.backends.mps.is_available():  # experimental mode
             print(f"Found mps device: {get_gpu_info()[0]['name']}")
             return torch.device("mps")
-        elif torch.xpu.is_available():
+        elif torch.xpu.is_available():  # experimental mode
             print(f"Found xpu device: {torch.xpu.get_device_name()}")
             return torch.device("xpu")
         else:
@@ -42,7 +42,7 @@ class Bench(object):
         else:
             return 0
 
-    def _load_backend(self, method, auto, size, epochs, batch_size):
+    def _load_backend(self, method, auto, size, epochs, batch_size, data_type):
         if auto:
             cuda_memory_size = self._get_cuda_memory_size()
             data_size = int(int((cuda_memory_size / 12296) / 100) * 100 * 0.7)
@@ -59,8 +59,12 @@ class Bench(object):
         elif method == "resnet50":
             if batch_size == 0:
                 batch_size = 4
+            if data_type == "FP16":
+                use_fp16 = True
+            else:
+                use_fp16 = False
             return ResNet50Bench(gpu_device=self.gpu_device, cpu_device=self.cpu_device, data_size=data_size,
-                                 batch_size=batch_size, epochs=epochs)
+                                 batch_size=batch_size, epochs=epochs, use_fp16=use_fp16)
 
 
 
