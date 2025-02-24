@@ -105,7 +105,37 @@ python main.py -m -s 512 -e 2 -mt resnet50 -bs 256 -dt FP32 -gpu 0
 python main.py -m -s 512 -e 2 -mt resnet50 -bs 256 -dt FP16 -gpu 0
 ```
 
-# Performance Test log
+# New Performance Test Log
+
+Test command:
+
+FP32: `python main.py -m -s 512 -e 3 -mt resnet50 -bs 256 -dt FP32`
+
+FP16: `python main.py -m -s 512 -e 3 -mt resnet50 -bs 256 -dt FP16`
+
+FP32 cudnn: `python main.py -m -s 512 -e 10 -mt resnet50 -bs 256 -dt FP32 -cudnn`
+
+FP16 cudnn: `python main.py -m -s 512 -e 10 -mt resnet50 -bs 256 -dt FP16 -cudnn`
+
+|               Device                |    Platform    | Driver  | FP32  | FP32 cudnn | FP16  | FP16 cudnn |                 Note                  |
+| :---------------------------------: | :------------: | :-----: | :---: | :--------: | :---: | :--------: | :-----------------------------------: |
+|    NVIDIA GeForce RTX 3090 24GB     |    Windows     | 566.14  | 16311 |   16628    | 28197 |   28865    |                   /                   |
+|    NVIDIA GeForce RTX 3080 20GB     | Linux (Docker) | 560.35  | 13320 |   13989    | 24205 |   25591    |   Unofficial Video Memory Expansion   |
+|        Tesla V100S-PCIE 32GB        | Linux (Docker) | 550.90  | 11577 |   12179    | 27963 |   28922    |                   /                   |
+|    NVIDIA TITAN X (Pascal) 12GB     |    Windows     | 566.14  | 5792  |     /      | 7230  |     /      | FP16 Not Officially Supported By CUDA |
+| Intel(R) Arc(TM) A770 Graphics 16GB |     Linux      | i915 xe | 5121  |     /      | 8049  |     /      |          GradScaler Not Work          |
+|                                     |                |         |       |            |       |            |                                       |
+|                                     |                |         |       |            |       |            |                                       |
+|                                     |                |         |       |            |       |            |                                       |
+|                                     |                |         |       |            |       |            |                                       |
+|                                     |                |         |       |            |       |            |                                       |
+|                                     |                |         |       |            |       |            |                                       |
+|                                     |                |         |       |            |       |            |                                       |
+
+
+
+# Old Performance Test log
+
 **Test Platform:** python 3.9 + pytorch 2.2.2 + cuda 11.8 + cudnn 8.7.0\
 The following test log is based on benchmark_cnn_v0.1
 * Nvidia
@@ -157,7 +187,7 @@ The following test log is based on benchmark_cnn_v0.1
 
 [//]: # (```)
 
-[//]: # ()
+[//]: #
 [//]: # (# GPUs)
 
 [//]: # (* Tesla K40c)
