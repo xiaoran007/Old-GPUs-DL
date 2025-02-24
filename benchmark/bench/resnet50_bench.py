@@ -34,7 +34,7 @@ class ResNet50Bench(object):
 
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=self.lr)
-        if device.type == "xpu":
+        if device.type in ["xpu", "mps"]:
             GS_dev = "cuda"
         else:
             GS_dev = device.type
